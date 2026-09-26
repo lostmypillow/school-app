@@ -17,17 +17,8 @@ export default function Index() {
   const [containerWidth, setContainerWidth] = React.useState(0);
   const { width } = useWindowDimensions();
 
-  // "sm" breakpoint equivalent (e.g., screen width >= 600px)
-  const isSm = width >= 600;
-  const itemWidth =
-    containerWidth > 0 && isSm
-      ? Math.floor((containerWidth - GAP * (COLUMNS - 1)) / COLUMNS)
-      : '100%';
-
-  // Derive height proportional to device screen height (e.g., ~15% of screen height) or an aspect ratio
-  const itemHeight = screenHeight * 0.33;
-
-  const items = Array.from({ length: 12 }, (_, i) => i + 1);
+  const isSm = screenWidth >= 600;
+  const itemWidth = isSm ? `${Math.floor(100 / COLUMNS - 2)}%` : '100%';
 
   return (
     // <View style={styles.container}>
@@ -50,38 +41,44 @@ export default function Index() {
         style={{ flex: 1, backgroundColor: theme.colors.background }}
         contentContainerStyle={styles.container}
       >
-        <View
-          onLayout={(e) => setContainerWidth(e.nativeEvent.layout.width)}
-          style={styles.grid}
-        >
-          {/* 1. Surface replaces Card. It provides the exact same shadow and background. */}
+        <View style={[styles.grid, { gap: isSm ? GAP : 0 }]}>
           <Surface
             elevation={1}
             style={[
               styles.item,
               {
                 width: itemWidth,
-                height: itemHeight,
-                borderRadius: 12, // Standard React Native Paper Card curve
-                overflow: 'hidden',
+                aspectRatio: isSm ? 1 : 2.5,
+                backgroundColor: theme.colors.elevation.level1,
+                borderRadius: 12,
               },
             ]}
           >
-            {/* 2. TouchableRipple sits directly inside and is forced to fill 100% of the space */}
             <TouchableRipple
               onPress={() => router.push('/browse')}
               style={{
                 flex: 1,
                 width: '100%',
+                borderRadius: 12,
+                overflow: 'hidden',
                 alignItems: 'center',
-                padding: 16, // This mimics standard <Card.Content> padding
                 justifyContent: 'center',
+                padding: 16,
               }}
             >
-              {/* 3. A standard View replaces Card.Content so layout isn't blocked */}
-              <View pointerEvents="none">
-                <Text variant="titleLarge">課程</Text>
-                <Text variant="bodyMedium">課程查詢</Text>
+              <View pointerEvents="none" style={{ alignItems: 'center' }}>
+                <Text
+                  variant="titleLarge"
+                  style={{ color: theme.colors.onSurface }}
+                >
+                  課程
+                </Text>
+                <Text
+                  variant="bodyMedium"
+                  style={{ color: theme.colors.onSurfaceVariant }}
+                >
+                  課程查詢
+                </Text>
               </View>
             </TouchableRipple>
           </Surface>
