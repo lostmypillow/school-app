@@ -14,7 +14,7 @@ import { FilterBase } from '@/components/filter/FilterBase';
 const start = new Date();
 
 export default function FilterResponsive() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   const theme = useTheme();
   const { width } = useWindowDimensions();
@@ -73,28 +73,7 @@ export default function FilterResponsive() {
 
               <Divider style={styles.headerDivider} />
 
-              {/* Form Content */}
               <FilterBase />
-
-              {/* Action Buttons */}
-              <View style={styles.actionsContainer}>
-                <Button
-                  mode="text"
-                  onPress={() => {
-                    console.log('Reset press');
-                  }}
-                >
-                  重設
-                </Button>
-                <Button
-                  mode="contained"
-                  icon="check"
-                  style={styles.saveButton}
-                  onPress={hideModal}
-                >
-                  確認送出
-                </Button>
-              </View>
             </Modal>
           </Portal>
         </>

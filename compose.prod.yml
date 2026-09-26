@@ -1,0 +1,8 @@
+services:
+  school-app-prod:
+    container_name: school-app-prod
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+

@@ -1,39 +1,47 @@
 import { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Menu, Text, useTheme } from 'react-native-paper';
-import {
-  DepartmentItem,
-  DepartmentYearItem,
-  SemesterItem,
-  useCourseFilter,
-} from '@/store';
+import { useCourseFilter } from '@/store';
+import { SemesterItem } from '@/schema/semesterItem';
+import { DepartmentItem } from '@/schema/departmentItem';
+import { DepartmentYearItem } from '@/schema/departmentYearItem';
 
 // 2. Combine into Discriminated Unions for props
 type FilterDropdownProps =
-  | { label: '學期'; data: SemesterItem[] }
-  | { label: '系所'; data: DepartmentItem[] }
-  | { label: '年級'; data: DepartmentYearItem[] };
+  | { label: '學期:'; data: SemesterItem[] }
+  | { label: '系所:'; data: DepartmentItem[] }
+  | { label: '年級:'; data: DepartmentYearItem[] };
 export default function FilterDropdown(props: FilterDropdownProps) {
   const theme = useTheme();
   const [menuVisible, setMenuVisible] = useState(false);
   const filteredValue = useCourseFilter((state) => {
-    if (props.label === '學期') return state.semesterYear;
-    if (props.label === '系所') return state.department;
+    if (props.label === '學期:') return state.semesterYear;
+    if (props.label === '系所:') return state.department;
     return state.departmentYear;
   });
   const setFilteredValue = useCourseFilter((state) => {
-    if (props.label === '學期') return state.setSemesterYear;
-    if (props.label === '系所') return state.setDepartment;
+    if (props.label === '學期:') return state.setSemesterYear;
+    if (props.label === '系所:') return state.setDepartment;
     return state.setDepartmentYear;
+  });
+  const setDepartmentYearName = useCourseFilter((state) => {
+    return state.setDepartmentYearName;
   });
   const getFilteredName = (id: string) => {
     const item = props.data.find((d) => d.id === id);
-    if (!item) return `選擇${props.label}`;
+    if (!item) return `選擇${props.label.replace(':', '')}`;
     if (item) {
-      return props.label === '學期'
+      return props.label === '學期:'
         ? `${item.year} 年 | 第 ${item.sem} 學期`
         : item.name;
     }
+  };
+  const handlePress = (semYear) => {
+    if (props.label == '年級:') {
+      setDepartmentYearName(semYear.name);
+    }
+    setFilteredValue(semYear.id);
+    setMenuVisible(false);
   };
   return (
     <View style={styles.fieldRow}>
@@ -60,7 +68,7 @@ export default function FilterDropdown(props: FilterDropdownProps) {
         anchor={
           <Button
             disabled={props.data.length === 0}
-            mode="outlined"
+            mode="text"
             compact
             icon="chevron-down"
             contentStyle={styles.dropdownButtonContent}
@@ -79,10 +87,7 @@ export default function FilterDropdown(props: FilterDropdownProps) {
           {props.data.map((semYear) => (
             <Menu.Item
               key={semYear.id}
-              onPress={() => {
-                setFilteredValue(semYear.id);
-                setMenuVisible(false);
-              }}
+              onPress={() => handlePress(semYear)}
               title={getFilteredName(semYear.id)}
               trailingIcon={semYear.id === filteredValue ? 'check' : undefined}
             />

@@ -1,0 +1,9 @@
+services:
+  school-app:
+    container_name: school-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+
