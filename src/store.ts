@@ -35,7 +35,7 @@ export const useCourseFilter = create<CourseFilterState>()(
         set({ departmentYearName: name });
       },
       setSemesterYear: async (newFilter: string) => {
-        set({ semesterYear: newFilter });
+        set({ semesterYear: newFilter, departmentYearData: [] });
         await get().fetchDepartments();
       },
       fetchDepartments: async () => {
