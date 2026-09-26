@@ -35,7 +35,7 @@ export default function Index() {
 
   return (
     // Explicit flex: 1 View container instead of <> prevents Safari collapse
-    <View
+    <Surface
       style={{
         flex: 1,
         width: '100%',
@@ -94,7 +94,7 @@ export default function Index() {
           </Surface>
         </View>
       </ScrollView>
-    </View>
+    </Surface>
   );
 }
 
