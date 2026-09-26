@@ -1,45 +1,55 @@
-// src/app/index.tsx
 import {
   View,
   StyleSheet,
   useWindowDimensions,
-  Pressable,
   useColorScheme,
 } from 'react-native';
 import {
-  Button,
-  Card,
   MD3DarkTheme,
   MD3LightTheme,
   Text,
-  useTheme,
+  Surface,
+  TouchableRipple,
 } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { CustomAppbarHeader } from '@/components/CustomAppbarHeader';
-import { Surface, TouchableRipple } from 'react-native-paper';
-
 import { ScrollView } from 'react-native';
 import React from 'react';
+
 const COLUMNS = 3;
 const GAP = 12;
 const PADDING = 18;
+
 export default function Index() {
+  const router = useRouter();
   const colorScheme = useColorScheme();
   const theme = colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme;
-  const router = useRouter();
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-  const [containerWidth, setContainerWidth] = React.useState(0);
-  const { width } = useWindowDimensions();
 
+  // Initialize dimensions BEFORE using screenWidth
+  const { width: screenWidth } = useWindowDimensions();
   const isSm = screenWidth >= 600;
-  const itemWidth = isSm ? `${Math.floor(100 / COLUMNS - 2)}%` : '100%';
+
+  const itemWidth = (
+    isSm ? `${Math.floor(100 / COLUMNS - 2)}%` : '100%'
+  ) as `${number}%`;
 
   return (
-    <>
+    // Explicit flex: 1 View container instead of <> prevents Safari collapse
+    <View
+      style={{
+        flex: 1,
+        width: '100%',
+        backgroundColor: theme.colors.background,
+      }}
+    >
       <CustomAppbarHeader title="Demo 大學" />
       <ScrollView
-        style={{ flex: 1, backgroundColor: theme.colors.background }}
-        contentContainerStyle={styles.container}
+        style={{
+          flex: 1,
+          width: '100%',
+          backgroundColor: theme.colors.background,
+        }}
+        contentContainerStyle={[styles.container, { flexGrow: 1 }]}
       >
         <View style={[styles.grid, { gap: isSm ? GAP : 0 }]}>
           <Surface
@@ -84,7 +94,7 @@ export default function Index() {
           </Surface>
         </View>
       </ScrollView>
-    </>
+    </View>
   );
 }
 
