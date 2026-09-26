@@ -4,5 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    networks:
+      - proxy-net
 
+networks:
+  proxy-net:
+    external: true
 
