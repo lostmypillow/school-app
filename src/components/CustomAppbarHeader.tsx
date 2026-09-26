@@ -7,10 +7,16 @@ export function CustomAppbarHeader({ title }: { title: string }) {
   const router = useRouter();
   const segments = useSegments();
   const isRoot = segments.length === 0;
-
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/');
+    }
+  };
   return (
     <Appbar.Header elevated>
-      {!isRoot ? <Appbar.BackAction onPress={() => router.back()} /> : null}
+      {!isRoot ? <Appbar.BackAction onPress={handleBack} /> : null}
 
       <Appbar.Content
         title={title}
