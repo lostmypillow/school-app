@@ -4,11 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    networks:
-      - proxy-net
-
-networks:
-  proxy-net:
-    external: true
+    ports:
+      - "127.0.0.1:8008:80"
 
 
